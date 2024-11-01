@@ -1,0 +1,139 @@
+ORG 10
+INPUT, CLA//for input one and clear AC
+FST, SKI // look for input
+BUN FST // no input
+/CLA // clear AC
+INP // input to AC
+STA FIRSTDIGIT //store input in first digit
+/CLA /clear AC
+/to add -48 for conversion to octal
+ADD NFORTYEIGHT //add -48 to input
+STA FIRSTDIGIT
+INPUTTWO, CLA //clear the AC
+FST2, SKI // look for input
+BUN FST2 // no input
+/CLA // clear AC
+INP // input to AC
+STA SECDIGIT //store input in second digit
+/CLA  /clear AC
+/LDA SECDIGIT /load to add -48 for conversion
+ADD NEGFORTYEIGHT //convert to octal
+STA SECDIGIT
+
+
+CONVERTDEC, CLA /clear AC
+LDA FIRSTDIGIT /Load the first digit
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+ADD FIRSTDIGIT
+STA FIRSTDIGIT /Adding seven times shows the x8 conversion for decimal
+
+DECIMALCONVERT, CLA /clear AC
+LDA FIRSTDIGIT
+ADD SECDIGIT //add digits together to get full decimal value
+STA DECIMAL 
+
+
+
+
+LDA DECIMAL
+STARTFIVELOOP, ADD NEGFIVE /Subtract 5 from Decimal
+STA DECIMAL
+SNA /skip if neg
+BUN STARTFIVELOOP
+ADD FIVE /add five back to loop at end
+SZA /skip if zero
+BUN STARTTHREELOOP
+BUN PASS
+CLA /
+CLE /
+LDA DECIMAL
+BUN STARTTHREELOOP
+
+CLA
+LDA DECIMAL
+STARTTHREELOOP, ADD NEGTHREE 
+/LDA DECIMAL
+/Subtract 3 from Decimal
+STA DECIMAL
+SNA /skip if neg
+BUN STARTTHREELOOP
+ADD THREE /add five back to loop at end
+STA DECIMAL
+SZA /skip to pass if zero
+BUN ZEROCASE
+BUN PASS
+/CLA
+
+ZEROCASE, CLA /if not multi of 3 or 5
+A, SKO
+BUN A
+ADD FORTYEIGHT
+OUT
+
+
+PASS, CLA /displaying output
+LDA DECIMAL
+STA REMAINDER
+CLA
+LDA DECIMAL  /Load the full decimal value
+DIVIDE2, ADD NEGTEN /Subtract 5 from Decimal
+/STA QUOTIENT  /Initialize quotient
+STA REMAINDER
+LDA QUOTIENT /increment quotient
+ADD ONE
+STA QUOTIENT /store quotient
+LDA REMAINDER /?
+SNA /skip next if negative
+BUN DIVIDE2
+ADD TEN /add ten back to loop
+STA REMAINDER 
+LDA QUOTIENT /decrement quotient
+ADD NEGONE /add -1 to quotient
+STA QUOTIENT /store quotient
+/TOASCII, CLA
+/LDA QUOTIENT /Load quotient
+ADD FORTYEIGHT /Convert to ASCII
+STA QUOTIENT  /Store ASCII value of quotient
+LDA REMAINDER /Load remainder
+ADD FORTYEIGHT /Convert to ASCII
+STA REMAINDER  /Store ASCII value of
+OUTPUT, CLA
+LDA QUOTIENT / Load the first digit
+LOOPT, SKO
+BUN LOOPT
+OUT
+/CLA
+LDA REMAINDER /load sec digit
+LOOP, SKO
+BUN LOOP
+OUT / Output the final DECIMAL value
+/CLA
+
+HLT
+
+FIRSTDIGIT, DEC 0 //first digit of octal number
+SECDIGIT, DEC 0 //second digit of octal number
+DECIMAL, DEC 0//full value of two digit octal num in decimal
+DECCOPY, DEC 0 /copy of decimal value
+NFORTYEIGHT, DEC -48 // Stores decimal number for conversion back to octal for first digit
+NEGFORTYEIGHT, DEC -48 //stores dec num for conversion back to octal for sec digit
+NEGFIVE, DEC -5
+NEGTHREE, DEC -3
+ZERO, DEC 0
+FIVE, DEC 5
+THREE, DEC 3
+TEN, DEC 10
+NEGONE, DEC -1
+FORTYEIGHT, DEC 48
+QUOTIENT, DEC 0
+REMAINDER, DEC 0
+NEGTEN, DEC -10
+FINAL, DEC 0
+ONE, DEC 1
+ZERO1, DEC 0
+END // End of the program
